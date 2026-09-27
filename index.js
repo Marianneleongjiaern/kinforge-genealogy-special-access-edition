@@ -491,7 +491,7 @@ async function elevenLabsSpeech(request, env = {}) {
   if (!env.ELEVENLABS_API_KEY) return problem("Human-like narration is not configured yet.", 503);
   let data;
   try { data = await request.json(); } catch { return problem("The narration request could not be read."); }
-  const text = String(data && data.text || "").replace(/\\s+/g, " ").trim().slice(0, 3000);
+  const text = String(data && data.text || "").replace(/\s+/g, " ").trim().slice(0, 3000);
   if (!text) return problem("Choose text to read aloud.");
   const voiceId = String((data && data.voiceId) || env.ELEVENLABS_VOICE_ID || "21m00Tcm4TlvDq8ikWAM").replace(/[^A-Za-z0-9_-]/g, "");
   const upstream = await fetch("https://api.elevenlabs.io/v1/text-to-speech/" + voiceId + "?output_format=mp3_44100_128", {
