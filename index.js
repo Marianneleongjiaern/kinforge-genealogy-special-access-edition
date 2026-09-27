@@ -46,7 +46,7 @@ const pages = {
   "/about/founding-story": {
     eyebrow: "Founding Story",
     title: "Why KinForge exists",
-    lead: "KinForge was created after Dreams of Serene Landscapes found other genealogy and relationship tools too limited, too rigid, or too expensive for many real users.",
+    lead: "KinForge was created after Dreams of Serene Landscapes spent years trying existing genealogy, writing, and relationship tools and found them too limited, too hidden behind unfair trials, too inaccessible, or too expensive for real users.",
     body: foundingStoryPage
   },
   "/about/mission": {
@@ -100,6 +100,8 @@ const downloadOptions = [
   ["Web app", "Browser access through a KinForge account, with full no-cost access only when approved."],
   ["Checksums", "SHA-256 verification remains part of the official release workflow."]
 ];
+
+const founderStatement = `<div class="notice founder-statement"><h2>Founding Statement</h2><p>It was not months. It was years of using the current existing ones. As writers, and as people, we wanted to find the perfect app, so we went on every app to try. Which to no avail, none of them had worked for us.</p><p>One of the common problems we realised is that the app would end up during the trial they would let us test only a small part of the app. If the app only had 50 features, they only let you test 10 features, and then ask you how was the app. We found that very unfair and ridiculous, because firstly, how are we or other users supposed to only be able to experience so little, or not even the full app, and come and tell the app producer how the app was like?</p><p>No wonder why people kept getting the free version, because it did not seem like it was worth it to get the paid versions. At the same time, for those who did purchase the paid versions, the app producers were scraping the money with ridiculously high prices that did not make sense, without the users knowing.</p><p>It is also hard if your family is very complicated, or you are very complicated, or if you are a famous writer trying to create a very complicated character with multiple features.</p><p>We spent months on SWOT analysis to try and figure out what went wrong. Some offered the wrong features, others offered not enough of the features, some simply were not usable, or were incomplete, or incompetent. So unlike people who would sit and do nothing, we decided to do something.</p><p>We sat down and for the past two months went on a SWOT analysis hunt on the existing websites and apps, their pros, cons, and everything, to create this app. We spent seconds, minutes, hours, days, and even weeks creating this app to fix the one problem that many users face: to get rid of the ridiculously high pricing, to make it easier for anyone who needs it, to make sure everyone's needs are met, and to make the world a better place.</p><p>Whoever needs a better version, or a complicated and good app with all the needed features, can get what they need and what they want without having to struggle or pay ridiculously high prices for something so essential. We found that ridiculous, since what other apps provided was too expensive, unfairly expensive, unfair, or inaccessible.</p><p>As advocates for accessibility and inclusivity we could not just sit by and watch people suffer, and watch other people's wallets suffer like this. Thus this app was created to help. This app has accessibility features and everything you could ever dream of or want. Of course, you may not have everything you want immediately, hence our support forms and feedback forms, so we can cater to your needs better. Help us improve the world; your support and feedback mean the world to us.</p><p>This is our way of fixing the issue that most people did not want to fix. We are proud of it. This app can now succeed, surpass every app, and make people happy, and that is all we want.</p><p>We also did that by making this app very dynamic and suitable for all platforms and browsers, with cloud protection, nobody sneaking into your data, no one stealing your stories and taking your copyright, and no more crammed or hard-to-read pages with crashes on your devices. This is to make the world a more inclusive and better place.</p></div>`;
 
 const tutorialLessons = [
   {
@@ -325,7 +327,7 @@ function valuesGraphic() {
 function aboutPage() {
   return aboutLinks() + storyBand() + `<section class="section">
     <div class="cards">
-      ${iconCard("S", "Founding Story", "KinForge began when Dreams of Serene Landscapes needed better genealogy and relationship-mapping tools than the options available.", "/about/founding-story")}
+      ${iconCard("S", "Founding Story", "KinForge began after years of trying existing tools and finding that too many were incomplete, inaccessible, unfairly limited in trials, or too expensive for complex needs.", "/about/founding-story")}
       ${iconCard("M", "Mission", "Give people a fairer, clearer, and more capable way to understand relationships, preserve stories, map communities, and build worlds.", "/about/mission")}
       ${iconCard("V", "Vision", "A world where family history, care context, historical memory, fictional continuity, and creative worldbuilding are easier to protect and understand.", "/about/vision")}
       ${iconCard("*", "Values", "Accessibility, affordable pricing, genealogy awareness, inclusivity, user ownership, respectful records, and better tools.", "/about/values")}
@@ -334,24 +336,14 @@ function aboutPage() {
 }
 
 function foundingStoryPage() {
-  return aboutLinks() + storyBand() + `<section class="section split">
-    <div>
-      <h2>Built because existing tools were not enough</h2>
-      <p>KinForge began after Dreams of Serene Landscapes spent months trying to make existing genealogy and relationship tools work for real needs: family history, complicated relationships, creative worlds, records, reports, accessibility, and affordability.</p>
-      <p>The available options often felt too narrow, too expensive, or not built for the people who needed them most.</p>
-    </div>
-    <div class="callout">
-      <h3>The KinForge answer</h3>
-      <p>Instead of accepting those limits, Dreams of Serene Landscapes chose to build a new kind of relationship studio: one that respects genealogy while also serving social workers, writers, historians, roleplayers, RPG players, students, educators, nonprofits, and families.</p>
-    </div>
-  </section>`;
+  return aboutLinks() + `<section class="section">${founderStatement}</section>`;
 }
 
 function missionPage() {
   return aboutLinks() + `<section class="section split">
     <div>
       <h2>Mission</h2>
-      <p>To give people a fairer, clearer, and more capable way to understand relationships, preserve stories, map communities, and build worlds without being blocked by inaccessible tools or unreasonable pricing.</p>
+      <p>To give people a fairer, clearer, and more capable way to understand relationships, preserve stories, map communities, and build worlds without being blocked by inaccessible tools, hidden trial limits, unsafe data practices, or unreasonable pricing.</p>
       ${missionGraphic()}
       <p>KinForge Genealogy Special Access Edition extends that mission to approved no-cost users while keeping the copyright and credit rules that protect the work.</p>
     </div>
@@ -366,7 +358,7 @@ function visionPage() {
   return aboutLinks() + `<section class="section split">
     <div>
       <h2>Vision</h2>
-      <p>A world where family history, care context, historical memory, fictional continuity, and creative worldbuilding are easier to protect, understand, and share responsibly.</p>
+      <p>A world where family history, care context, historical memory, fictional continuity, creative worldbuilding, and personal stories are easier to protect, understand, and share responsibly across devices and platforms.</p>
       ${visionGraphic()}
       <p>KinForge aims to make genealogy and relationship mapping useful beyond a single use case, supporting real families, care networks, archives, classrooms, nonprofits, creative writing, and RPG worlds.</p>
     </div>
@@ -462,12 +454,7 @@ function narrationPlayer(lesson) {
 
 function storyBand() {
   return `<section class="section story">
-    <p class="eyebrow">Their Story</p>
-    <h2>Why KinForge exists</h2>
-    <div class="columns">
-      <p>KinForge Genealogy Studio was created by Dreams of Serene Landscapes after months of trying other genealogy and relationship-mapping tools and finding that many were too limited, too rigid, or priced beyond what many users could reasonably afford.</p>
-      <p>Dreams of Serene Landscapes built KinForge with a mission to make genealogy, genograms, family history, fictional lineages, historical networks, and worldbuilding more accessible, inclusive, and practical.</p>
-    </div>
+    ${founderStatement}
     ${missionGraphic()}
     ${visionGraphic()}
   </section>`;
