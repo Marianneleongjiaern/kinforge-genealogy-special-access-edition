@@ -27,3 +27,7 @@ Special Access Edition is for approved close people and approved FOP-style reque
 Product of Dreams of Serene Landscapes. Copyright 2026 Dreams of Serene Landscapes. All rights reserved.
 
 Special Access Edition is not copyright-free. Exports and downloads keep the required KinForge and Dreams of Serene Landscapes copyright and credit rules.
+
+## Verification refresh
+
+Latest Special Access GitHub Pages deployment succeeded after the dynamic Special Access source and GitHub discovery page were pushed.
