@@ -94,6 +94,33 @@ const downloadOptions = [
   ["Checksums", "SHA-256 verification remains part of the official release workflow."]
 ];
 
+const tutorialLessons = [
+  {
+    title: "Start with Special Access safely",
+    text: "Open the app, sign in with a KinForge account, confirm the copyright and credit agreement, and keep the Special Access code private.",
+    frames: ["Open the Special Access welcome screen.", "Review the credit and copyright notice.", "Sign in or create a KinForge account.", "Keep the private access code secure."],
+    narration: ["Welcome to KinForge Genealogy Special Access Edition.", "Start by reading the access notice carefully.", "This edition is approved no-cost access, not copyright-free access.", "Sign in with your KinForge account and keep the private code secure."]
+  },
+  {
+    title: "Create your first tree",
+    text: "Create a tree for family history, social-work context, historical research, fiction, roleplay, RPG campaigns, or other relationship-mapping work.",
+    frames: ["Choose Create Tree.", "Name the tree clearly.", "Pick the purpose of the project.", "Save the tree before adding people."],
+    narration: ["Choose Create Tree from the workspace.", "Give your tree a clear name so it is easy to find later.", "Select the purpose that best matches your work.", "Save the tree, then begin adding people and records."]
+  },
+  {
+    title: "Add people and relationships",
+    text: "Add profiles, connect relationships, write notes, and keep real people, fictional characters, and historical records organized responsibly.",
+    frames: ["Add the first person.", "Fill in profile details.", "Connect relatives or relationship links.", "Add careful notes and sources."],
+    narration: ["Add the first person to the tree.", "Fill in names, dates, notes, and any context you have permission to store.", "Connect relatives, care links, fictional relationships, or campaign roles.", "Add sources and notes so the tree is useful later."]
+  },
+  {
+    title: "Export with credit",
+    text: "Before downloading GEDCOM, documents, reports, PDFs, CSVs, backups, or other exports, confirm the required KinForge/Dreams credit and copyright rule.",
+    frames: ["Open Export or Download.", "Review the export agreement.", "Choose the file type.", "Download the credited file."],
+    narration: ["Open the export or download area when you are ready.", "Review the agreement before creating any file.", "Choose the file type you need, such as GEDCOM, document, PDF, report, CSV, or backup.", "Download the file with the required KinForge and Dreams of Serene Landscapes copyright and credit notice."]
+  }
+];
+
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" })[char]);
 }
@@ -157,6 +184,7 @@ function pageShell(path, page) {
     <p>Product of Dreams of Serene Landscapes. Copyright 2026 Dreams of Serene Landscapes. All rights reserved.</p>
     <nav aria-label="Footer">${links}<a href="/go/main-site">Main Site</a></nav>
   </footer>
+  <script>${clientScript()}</script>
 </body>
 </html>`;
 }
@@ -310,15 +338,72 @@ function valuesPage() {
 function tutorialsPage() {
   return `<section class="section split">
     <div>
-      <h2>Official tutorial library</h2>
-      <p>Open the main tutorial library for detailed help with creating a family tree, editing profiles, adding relationships, organizing books and collections, generating reports, exporting files, and using Special Access Edition responsibly.</p>
+      <h2>Interactive tutorial library</h2>
+      <p>Use these Special Access walkthroughs to learn the app step by step. Each lesson includes on-screen demo steps, browser narration, subtitles, and a volume control.</p>
+      <p>For the full public tutorial library, open the main KinForge tutorial page.</p>
+      <div class="actions"><a class="button primary" href="/go/tutorials">Open main tutorial library</a><a class="button secondary" href="/go/terms">Terms & Conditions</a><a class="button secondary" href="/go/privacy">Privacy Policy</a></div>
     </div>
-    <div class="callout">
-      <a class="button primary" href="/go/tutorials">Open tutorials</a>
-      <a class="button secondary" href="/go/terms">Terms & Conditions</a>
-      <a class="button secondary" href="/go/privacy">Privacy Policy</a>
+    <div class="cards tutorial-list">${tutorialLessons.map((lesson, index) => card(lesson.title, lesson.text, `#tutorial-${index + 1}`)).join("")}</div>
+  </section>
+  ${tutorialLessons.map(tutorialLesson).join("")}`;
+}
+
+function tutorialLesson(lesson, index) {
+  return `<section class="section tutorial-lesson" id="tutorial-${index + 1}">
+    <div>
+      <p class="eyebrow">Tutorial ${index + 1}</p>
+      <h2>${escapeHtml(lesson.title)}</h2>
+      <p>${escapeHtml(lesson.text)}</p>
+      ${visualWalkthrough(lesson)}
     </div>
+    ${narrationPlayer(lesson)}
   </section>`;
+}
+
+function visualWalkthrough(lesson) {
+  const frames = lesson.frames.map((frame, index) => `<article class="visual-frame"${index === 0 ? "" : " hidden"} data-visual-frame>
+    <div class="mock-app">
+      <div class="mock-sidebar"><span></span><span></span><span></span></div>
+      <div class="mock-canvas">
+        <div class="mock-toolbar"><span></span><span></span><span></span></div>
+        <div class="mock-tree">
+          <span class="mock-person primary"></span>
+          <span class="mock-person"></span>
+          <span class="mock-person"></span>
+          <span class="mock-person small"></span>
+          <span class="mock-person small"></span>
+        </div>
+        <p class="mock-highlight">${escapeHtml(frame)}</p>
+      </div>
+    </div>
+  </article>`).join("");
+  return `<div class="visual-demo" data-visual-demo>
+    <div class="visual-toolbar">
+      <h3>Watch the app walkthrough</h3>
+      <p class="visual-status" data-visual-status>Step 1 of ${lesson.frames.length}</p>
+    </div>
+    <div class="visual-stage">${frames}</div>
+    <div class="visual-controls">
+      <button type="button" data-visual-prev>Previous</button>
+      <button type="button" data-visual-play>Play demo</button>
+      <button type="button" data-visual-next>Next</button>
+    </div>
+  </div>`;
+}
+
+function narrationPlayer(lesson) {
+  return `<aside class="narration-player" data-narration="${escapeHtml(lesson.narration.join(" "))}">
+    <h3>Audio narration</h3>
+    <p class="muted">Browser narration reads the tutorial aloud while the subtitles stay visible on screen.</p>
+    <div class="actions">
+      <button type="button" class="narration-play">Play narration</button>
+      <button type="button" class="narration-pause">Pause</button>
+      <button type="button" class="narration-stop">Stop</button>
+    </div>
+    <label class="narration-volume">Volume <input type="range" min="0" max="100" step="5" value="85" aria-label="Narration volume"><span>85%</span></label>
+    <ol class="narration-lines">${lesson.narration.map(line => `<li data-narration-line>${escapeHtml(line)}</li>`).join("")}</ol>
+    <p class="narration-status muted" aria-live="polite"></p>
+  </aside>`;
 }
 
 function storyBand() {
@@ -336,8 +421,12 @@ function card(title, text, href) {
   return `<article><h3>${escapeHtml(title)}</h3><p>${escapeHtml(text)}</p><a href="${href}">Open</a></article>`;
 }
 
+function clientScript() {
+  return `(function(){function q(a,b){return Array.prototype.slice.call((b||document).querySelectorAll(a))}q("[data-visual-demo]").forEach(function(demo){var frames=q("[data-visual-frame]",demo),status=demo.querySelector("[data-visual-status]"),prev=demo.querySelector("[data-visual-prev]"),next=demo.querySelector("[data-visual-next]"),play=demo.querySelector("[data-visual-play]"),i=0,timer=null;function show(n){i=(n+frames.length)%frames.length;frames.forEach(function(frame,index){frame.hidden=index!==i});if(status)status.textContent="Step "+(i+1)+" of "+frames.length}function stop(){if(timer){clearInterval(timer);timer=null;if(play)play.textContent="Play demo"}}if(prev)prev.addEventListener("click",function(){stop();show(i-1)});if(next)next.addEventListener("click",function(){stop();show(i+1)});if(play)play.addEventListener("click",function(){if(timer){stop();return}play.textContent="Pause demo";timer=setInterval(function(){show(i+1)},2200)});show(0)});q(".narration-player").forEach(function(player){var play=player.querySelector(".narration-play"),pause=player.querySelector(".narration-pause"),stop=player.querySelector(".narration-stop"),volume=player.querySelector(".narration-volume input"),volumeLabel=player.querySelector(".narration-volume span"),status=player.querySelector(".narration-status"),lines=q("[data-narration-line]",player),utterance=null;function setStatus(text){if(status)status.textContent=text}function highlight(index){lines.forEach(function(line,i){line.classList.toggle("active",i===index)})}function cancel(){if("speechSynthesis" in window)window.speechSynthesis.cancel();utterance=null;highlight(-1)}if(volume)volume.addEventListener("input",function(){if(volumeLabel)volumeLabel.textContent=volume.value+"%";if(utterance)utterance.volume=Number(volume.value)/100});if(play)play.addEventListener("click",function(){if(!("speechSynthesis" in window)){setStatus("Audio narration is not available in this browser.");return}cancel();var text=lines.map(function(line){return line.textContent}).join(" ");utterance=new SpeechSynthesisUtterance(text);utterance.volume=volume?Number(volume.value)/100:.85;utterance.rate=.95;utterance.onboundary=function(event){var spoken=text.slice(0,event.charIndex);var sentenceIndex=(spoken.match(/[.!?]/g)||[]).length;highlight(Math.min(sentenceIndex,lines.length-1))};utterance.onstart=function(){setStatus("Narration playing.")};utterance.onend=function(){setStatus("Narration finished.");highlight(-1);utterance=null};utterance.onerror=function(){setStatus("Narration stopped.");highlight(-1);utterance=null};window.speechSynthesis.speak(utterance)});if(pause)pause.addEventListener("click",function(){if(!("speechSynthesis" in window))return;if(window.speechSynthesis.paused){window.speechSynthesis.resume();setStatus("Narration resumed.")}else{window.speechSynthesis.pause();setStatus("Narration paused.")}});if(stop)stop.addEventListener("click",function(){cancel();setStatus("Narration stopped.")})})})();`;
+}
+
 function styles() {
-  return `:root{color-scheme:light;--ink:#201d28;--muted:#675c73;--line:rgba(44,35,58,.16);--paper:#fffdf8;--soft:#f4eff7;--accent:#6c4fa2;--accent2:#0f766e;--gold:#b98520}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}a{color:inherit}.skip{position:absolute;left:12px;top:-48px;z-index:10;background:var(--ink);color:white;padding:10px 14px}.skip:focus{top:12px}.topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:14px clamp(18px,4vw,52px);background:rgba(255,253,248,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:850}.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:700}.mark{display:grid;place-items:center;width:42px;height:42px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-weight:900}nav{display:flex;align-items:center;flex-wrap:wrap;gap:12px}nav a,summary{text-decoration:none;color:var(--muted);font-weight:750}.nav-menu{position:relative}.nav-menu summary{list-style:none;cursor:pointer}.nav-menu summary::-webkit-details-marker{display:none}.nav-menu summary:after{content:"";display:inline-block;width:.45em;height:.45em;margin-left:.42em;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-.18em) rotate(45deg)}.nav-menu div{position:absolute;right:0;top:calc(100% + 12px);min-width:190px;display:grid;gap:4px;padding:10px;border:1px solid var(--line);border-radius:8px;background:white;box-shadow:0 16px 42px rgba(32,29,40,.12)}.nav-menu:not([open]) div{display:none}.nav-menu div a{padding:9px 10px;border-radius:6px}.nav-menu div a:hover{background:var(--soft)}.subnav{margin:clamp(24px,5vw,52px) clamp(18px,5vw,72px) 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:white}.subnav a{padding:9px 12px;border-radius:999px;background:var(--soft);color:#443652}.hero{min-height:84vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,480px);gap:clamp(24px,5vw,72px);align-items:center;padding:clamp(54px,8vw,98px) clamp(18px,5vw,72px);background:linear-gradient(rgba(255,253,248,.92),rgba(255,253,248,.86)),radial-gradient(circle at 20% 20%,rgba(108,79,162,.22),transparent 32%),radial-gradient(circle at 85% 20%,rgba(15,118,110,.18),transparent 28%)}.eyebrow{margin:0 0 10px;color:var(--accent);text-transform:uppercase;font-size:.78rem;font-weight:900;letter-spacing:.08em}h1,h2,h3{margin:0;line-height:1.05;letter-spacing:0}h1{max-width:880px;font-size:clamp(3rem,8vw,7rem)}h2{font-size:clamp(2rem,4vw,4rem)}h3{font-size:1.2rem}p{color:var(--muted)}.lead{max-width:740px;color:#3d3548;font-size:clamp(1.08rem,2vw,1.42rem)}.actions,.callout{display:flex;flex-wrap:wrap;gap:12px}.button,.cards a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border-radius:8px;padding:10px 16px;text-decoration:none;font-weight:850}.primary{background:var(--accent);color:white}.secondary,.cards a{border:1px solid var(--line);background:white;color:var(--accent)}.quiet{color:var(--accent2)}.hero-panel,.callout,.cards article{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.88);box-shadow:0 16px 42px rgba(32,29,40,.08)}.hero-panel,.cards article,.callout{padding:24px}.hero-panel li,.callout li{margin:10px 0;color:var(--muted)}.notice{margin:clamp(24px,5vw,52px) clamp(18px,5vw,72px) 0;padding:18px 20px;border-left:6px solid var(--gold);background:#fff7df;color:#4a3820}.section{padding:clamp(54px,7vw,86px) clamp(18px,5vw,72px)}.grid,.split{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,5vw,64px);align-items:start}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.columns{columns:2 320px;column-gap:42px;max-width:980px}.story{background:var(--soft)}footer{padding:36px clamp(18px,5vw,72px);border-top:1px solid var(--line);background:#201d28;color:white}footer p{color:rgba(255,255,255,.78)}footer nav a,footer summary{color:white}@media(max-width:860px){.topbar,.hero,.grid,.split{grid-template-columns:1fr}.topbar{position:static;align-items:flex-start;flex-direction:column}.nav-menu div{position:static;margin-top:8px}.cards{grid-template-columns:1fr}h1{font-size:clamp(3rem,16vw,5rem)}}`;
+  return `:root{color-scheme:light;--ink:#201d28;--muted:#675c73;--line:rgba(44,35,58,.16);--paper:#fffdf8;--soft:#f4eff7;--accent:#6c4fa2;--accent2:#0f766e;--gold:#b98520}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}a{color:inherit}.skip{position:absolute;left:12px;top:-48px;z-index:10;background:var(--ink);color:white;padding:10px 14px}.skip:focus{top:12px}.topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:14px clamp(18px,4vw,52px);background:rgba(255,253,248,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:850}.brand small{display:block;color:var(--muted);font-size:.78rem;font-weight:700}.mark{display:grid;place-items:center;width:42px;height:42px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-weight:900}nav{display:flex;align-items:center;flex-wrap:wrap;gap:12px}nav a,summary{text-decoration:none;color:var(--muted);font-weight:750}.nav-menu{position:relative}.nav-menu summary{list-style:none;cursor:pointer}.nav-menu summary::-webkit-details-marker{display:none}.nav-menu summary:after{content:"";display:inline-block;width:.45em;height:.45em;margin-left:.42em;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-.18em) rotate(45deg)}.nav-menu div{position:absolute;right:0;top:calc(100% + 12px);min-width:190px;display:grid;gap:4px;padding:10px;border:1px solid var(--line);border-radius:8px;background:white;box-shadow:0 16px 42px rgba(32,29,40,.12)}.nav-menu:not([open]) div{display:none}.nav-menu div a{padding:9px 10px;border-radius:6px}.nav-menu div a:hover{background:var(--soft)}.subnav{margin:clamp(24px,5vw,52px) clamp(18px,5vw,72px) 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:white}.subnav a{padding:9px 12px;border-radius:999px;background:var(--soft);color:#443652}.hero{min-height:84vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,480px);gap:clamp(24px,5vw,72px);align-items:center;padding:clamp(54px,8vw,98px) clamp(18px,5vw,72px);background:linear-gradient(rgba(255,253,248,.92),rgba(255,253,248,.86)),radial-gradient(circle at 20% 20%,rgba(108,79,162,.22),transparent 32%),radial-gradient(circle at 85% 20%,rgba(15,118,110,.18),transparent 28%)}.eyebrow{margin:0 0 10px;color:var(--accent);text-transform:uppercase;font-size:.78rem;font-weight:900;letter-spacing:.08em}h1,h2,h3{margin:0;line-height:1.05;letter-spacing:0}h1{max-width:880px;font-size:clamp(3rem,8vw,7rem)}h2{font-size:clamp(2rem,4vw,4rem)}h3{font-size:1.2rem}p{color:var(--muted)}.muted{color:var(--muted)}.lead{max-width:740px;color:#3d3548;font-size:clamp(1.08rem,2vw,1.42rem)}.actions,.callout{display:flex;flex-wrap:wrap;gap:12px}.button,.cards a,button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border-radius:8px;padding:10px 16px;text-decoration:none;font-weight:850}.primary{background:var(--accent);color:white}.secondary,.cards a,button{border:1px solid var(--line);background:white;color:var(--accent)}button{font:inherit;cursor:pointer}.quiet{color:var(--accent2)}.hero-panel,.callout,.cards article,.visual-demo,.narration-player{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.88);box-shadow:0 16px 42px rgba(32,29,40,.08)}.hero-panel,.cards article,.callout,.visual-demo,.narration-player{padding:24px}.hero-panel li,.callout li{margin:10px 0;color:var(--muted)}.notice{margin:clamp(24px,5vw,52px) clamp(18px,5vw,72px) 0;padding:18px 20px;border-left:6px solid var(--gold);background:#fff7df;color:#4a3820}.section{padding:clamp(54px,7vw,86px) clamp(18px,5vw,72px)}.grid,.split,.tutorial-lesson{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,5vw,64px);align-items:start}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.tutorial-list article{scroll-margin-top:90px}.visual-demo{margin-top:24px}.visual-toolbar,.visual-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.visual-status{margin:0;font-weight:800;color:var(--accent2)}.visual-stage{margin:18px 0}.visual-frame[hidden]{display:none}.mock-app{display:grid;grid-template-columns:90px minmax(0,1fr);min-height:280px;overflow:hidden;border:1px solid var(--line);border-radius:8px;background:#fbf9f1}.mock-sidebar{display:grid;align-content:start;gap:12px;padding:16px;background:#282232}.mock-sidebar span,.mock-toolbar span{display:block;height:14px;border-radius:999px;background:rgba(255,255,255,.6)}.mock-canvas{position:relative;padding:18px}.mock-toolbar{display:flex;gap:10px;margin-bottom:28px}.mock-toolbar span{width:70px;background:#ded6e8}.mock-tree{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:center;min-height:130px}.mock-person{display:block;width:78px;height:54px;border-radius:8px;background:#dbeafe;border:2px solid #6c4fa2}.mock-person.primary{background:#e9d5ff}.mock-person.small{width:58px;height:44px;background:#ccfbf1}.mock-highlight{margin:18px 0 0;padding:14px;border-left:5px solid var(--gold);background:#fff7df;color:#4a3820;font-weight:850}.narration-player{position:sticky;top:92px}.narration-volume{width:100%;display:grid;grid-template-columns:auto minmax(120px,1fr) 48px;align-items:center;gap:12px;margin:12px 0;color:var(--muted);font-weight:800}.narration-lines{padding-left:20px}.narration-lines li{margin:10px 0;color:var(--muted);transition:background .2s,color .2s}.narration-lines li.active{background:#fff7df;color:#4a3820;outline:2px solid rgba(185,133,32,.35);border-radius:6px}.columns{columns:2 320px;column-gap:42px;max-width:980px}.story{background:var(--soft)}footer{padding:36px clamp(18px,5vw,72px);border-top:1px solid var(--line);background:#201d28;color:white}footer p{color:rgba(255,255,255,.78)}footer nav a,footer summary{color:white}@media(max-width:860px){.topbar,.hero,.grid,.split,.tutorial-lesson{grid-template-columns:1fr}.topbar{position:static;align-items:flex-start;flex-direction:column}.nav-menu div{position:static;margin-top:8px}.cards{grid-template-columns:1fr}.narration-player{position:static}.mock-app{grid-template-columns:60px minmax(0,1fr)}h1{font-size:clamp(3rem,16vw,5rem)}}`;
 }
 
 export default {
@@ -360,7 +449,7 @@ export default {
         "Cache-Control": "no-store",
         "X-Content-Type-Options": "nosniff",
         "Referrer-Policy": "strict-origin-when-cross-origin",
-        "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; img-src https: data:; form-action 'self'; base-uri 'none'; frame-ancestors 'self'"
+        "Content-Security-Policy": "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src https: data:; form-action 'self'; base-uri 'none'; frame-ancestors 'self'"
       }
     });
   }
