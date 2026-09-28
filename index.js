@@ -1,6 +1,19 @@
 const MAIN_SITE = "https://kinforge-genealogy-studio-public.marianneleong3.chatgpt.site";
 const SPECIAL_ACCESS_LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="KinForge Special Access logo"><defs><linearGradient id="sa-bg" x1="8" y1="8" x2="88" y2="88" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff8fb"/><stop offset=".46" stop-color="#f4eff7"/><stop offset="1" stop-color="#102f35"/></linearGradient><filter id="sa-shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#102f35" flood-opacity=".2"/></filter></defs><rect x="5" y="5" width="86" height="86" rx="23" fill="url(#sa-bg)" stroke="#c9a16f" stroke-opacity=".42"/><rect x="14" y="14" width="68" height="68" rx="18" fill="rgba(255,255,255,.66)" filter="url(#sa-shadow)"/><path d="M28 71V25h11v19l17-19h14L50 47l22 24H58L39 50v21H28Z" fill="#102f35"/><path d="M66 20l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1 4-9Z" fill="#c9a16f"/><path d="M21 78h54" stroke="#102f35" stroke-width="4" stroke-linecap="round"/><circle cx="79" cy="78" r="5" fill="#c9a16f"/></svg>`;
 const SPECIAL_ACCESS_FAVICON = `data:image/svg+xml,${encodeURIComponent(SPECIAL_ACCESS_LOGO)}`;
+const securityHeaders = {
+  "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Cross-Origin-Opener-Policy": "same-origin",
+  "Cross-Origin-Resource-Policy": "same-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()"
+};
+const pageSecurityHeaders = {
+  ...securityHeaders,
+  "Content-Security-Policy": "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src https: data:; connect-src 'self'; media-src 'self' blob: data:; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
+};
 
 const pages = {
   "/": {
@@ -180,7 +193,7 @@ function escapeHtml(value) {
 }
 
 function redirect(location, status = 302) {
-  return new Response(null, { status, headers: { Location: location, "Cache-Control": "no-store" } });
+  return new Response(null, { status, headers: { Location: location, "Cache-Control": "no-store", ...securityHeaders } });
 }
 
 function pageShell(path, page) {
@@ -590,16 +603,14 @@ export default {
     if (path === "/go/contribute") return redirect(`${MAIN_SITE}/website/contribute/`);
     if (path === "/go/terms") return redirect(`${MAIN_SITE}/website/terms/`);
     if (path === "/go/privacy") return redirect(`${MAIN_SITE}/website/privacy-policy/`);
-    if (path === "/api/status") return Response.json({ ok: true, edition: "KinForge Genealogy Special Access Edition", dynamic: true });
+    if (path === "/api/status") return Response.json({ ok: true, edition: "KinForge Genealogy Special Access Edition", dynamic: true }, { headers: { "Cache-Control": "no-store", ...securityHeaders } });
     const page = pages[path];
     if (!page) return redirect("/");
     return new Response(pageShell(path, page), {
       headers: {
         "Content-Type": "text/html; charset=utf-8",
         "Cache-Control": "no-store",
-        "X-Content-Type-Options": "nosniff",
-        "Referrer-Policy": "strict-origin-when-cross-origin",
-        "Content-Security-Policy": "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src https: data:; connect-src 'self'; media-src 'self' blob: data:; form-action 'self'; base-uri 'none'; frame-ancestors 'self'"
+        ...pageSecurityHeaders
       }
     });
   }
