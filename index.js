@@ -274,7 +274,7 @@ function downloadsPage() {
       <p class="eyebrow">Special Access downloads</p>
       <h2>Download the Special Access Edition after approval</h2>
       <p>Special Access Edition has its own app packages, installers, portable builds, and web app entry. These are separate from the public demo and paid public editions.</p>
-      <p>After approval, the user enters the private Special Access code to unlock the dedicated downloads and web app entry for this edition. The public create-account flow is not the landing flow for Special Access.</p>
+      <p>After approval, the user enters the private Special Access code to unlock the dedicated downloads and web app entry for this edition. Special Access starts from approval and the private code gate.</p>
       <div class="actions"><a class="button primary" href="#special-access-downloads">View Special Access files</a><a class="button secondary" href="/request-access">Request approval first</a></div>
     </div>
     <div class="cards" id="special-access-downloads">${downloadOptions.map(([title, text]) => card(title, text, "#special-access-downloads")).join("")}</div>
